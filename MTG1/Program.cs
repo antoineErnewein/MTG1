@@ -12,7 +12,7 @@ namespace MTG1
         {
             Matrice mat = new Matrice(1);
             bool again = true;
-            Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (29/11/12) |\n ---------------------------\n");
+            Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
             Console.WriteLine("1) Creer une matrice aleatoire a N sommets\n2) Importer un fichier CSV\n");
             int choix = int.Parse(Console.ReadLine());
             switch (choix)
@@ -37,7 +37,7 @@ namespace MTG1
 
             while (again)
             {
-                Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (29/11/12) |\n ---------------------------\n");
+                Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
                 Console.WriteLine("Matrice d'adjacence :\n\n");
                 mat.printMatrice();
                 Console.WriteLine("\nActions :\n1) Ajouter un noeud\n2) Supprimer un noeud\n3) Modifier le nombre d'arc entre deux noeuds\n4) Parcours BFS\n5) Parcours DFS\n6) CFC selon Malgrange\n7) Warshall\n8) Quitter");
@@ -94,7 +94,7 @@ namespace MTG1
                     case 6:
                         Console.WriteLine("Composante Fortement connexe du graphe :");
                         List<List<char>> CFC = mat.Malgrange();
-                        string cfc = "[ ";
+                        string cfc = "";
                         foreach (List<char> l in CFC)
                         {
                             cfc += "<";
@@ -104,7 +104,7 @@ namespace MTG1
                             }
                             cfc += ">";
                         }
-                        //cfc = cfc.Substring(0, cfc.Length - 2) + " ]";
+
                         Console.WriteLine(cfc);
                         Console.ReadLine();
                         break;
@@ -344,6 +344,7 @@ namespace MTG1
             sr.Close();
         }
 
+        //Donne la composante fortement connexe du graphe
         public List<List<Char>> Malgrange()
         {
             Random rand = new Random();
@@ -354,12 +355,12 @@ namespace MTG1
             List<Char> Predecesseurs = new List<Char>();
             int sommet_elu = 0;
 
+            //Trouver condition pour sommet isolé (non pris en charge par DFS)
             while (Sommets.Count > 0)
             {
                 sommet_elu = rand.Next(0, Sommets.Count);
                 Successeurs = DFS(this.info.IndexOf(Sommets[sommet_elu]));
-                // Trouver les preds...
-                Predecesseurs = predecessor(this.info.IndexOf(Sommets[sommet_elu]));
+                Predecesseurs = predecesseurs(this.info.IndexOf(Sommets[sommet_elu]));
                 foreach (char sommet in Successeurs)
                 {
                     if (Predecesseurs.Contains(sommet))
@@ -368,6 +369,13 @@ namespace MTG1
                         Sommets.Remove(sommet);
                     }
                 }
+                //Cas sommet isolé
+                /*if (Successeurs.Count == 0 && Predecesseurs.Count == 0)
+                {
+                    CFC.Add(Sommets[Sommets.);
+                    Sommets.Remove(sommet);
+                }*/
+
                 ListeCFC.Add(new List<char>(CFC));
                 CFC.Clear();
             }
@@ -375,6 +383,7 @@ namespace MTG1
             return ListeCFC;
         }
 
+        //Parcours d'arbre en largeur
         public List<char> BFS(int racine)
         {
             List<char> res = new List<char>();
@@ -405,6 +414,7 @@ namespace MTG1
             return res;
         }
 
+        //Parcours d'abre en profondeur 
         public List<char> DFS(int racine)
         {
             pDFS = new List<char>();
@@ -416,6 +426,7 @@ namespace MTG1
             return pDFS;
         }
 
+        //Procédure récursive utilisée dans DSF
         public void recDFS(int[,] a, int racine, int n, bool[] explored)
         {
             pDFS.Add(this.info[racine]);
@@ -430,67 +441,93 @@ namespace MTG1
             }
         }
 
-        
-                public List<char> predecessor(int racine)
+                //Cherche les prédécesseurs d'un sommet
+                public List<char> predecesseurs(int racine)
                 {
-            
-                    pred = new List<char>();
+                    List<Char> predecesseurs = new List<char>();
+                    int indicepred = 0;
                     bool[] explored = new bool[this.taille];
                     for (int i = 0; i < this.taille; i++)
                     {
                         explored[i] = false;
                     }
 
-                    recPredecessor(this.tab, racine, this.taille, explored);
-                    return pred;
-                }
-
-                public void recPredecessor(int[,] a, int racine, int n, bool[] explored)
-                {
-                    pred.Add(this.info[racine]);
-                    explored[racine] = true;
-                    for (int i = 0; i < n; i++)
+                    for (int i = 0; i < this.taille; i++)
                     {
-                        if (a[racine, i] > 0)
+                        if (this.tab[racine, i] > 0)
                         {
                             if (!explored[i])
                             {
-                                recDFS(a, i, n, explored);
+                                predecesseurs.Add(this.info[i]);
                             }
                         }
                     }
+
+                    while(prochainPred(predecesseurs, explored) != -1)
+                    {
+                        indicepred = prochainPred(predecesseurs, explored);
+                        explored[indicepred] = true;
+
+                        for (int i = 0; i < this.taille; i++)
+                        {
+                            if (this.tab[indicepred, i] > 0)
+                            {
+                                if (!explored[i])
+                                {
+                                    predecesseurs.Add(this.info[i]);
+                                }
+                            }
+                        }
+
+                    }
+
+                    return predecesseurs;
                 }
 
-        public int[,] Warshall()
-        {
-            int n = this.taille;
-            int[,] d = new int[n, n];
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
+                //Cherche le prochain prédecesseur
+                public int prochainPred(List<char> pred, bool[] explored)
                 {
-                    d[i, j] = this.tab[i, j];
-                }
-            }
-            for (int k = 0; k < n; k++)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    for (int j = 0; j < n; j++)
+                    int res = -1;
+
+                    for (int i = 0; i < pred.Count; i++)
                     {
-                        int dik = d[i, k], dkj = d[k, j];
-                        if (dik == M || dkj == M) continue;
-                        int u = dik + dkj;
-                        if (u < d[i, j])
+                        if (!explored[this.info.IndexOf(pred[i])])
                         {
-                            d[i, j] = u;
+                            res = this.info.IndexOf(pred[i]);
+                            break;
                         }
                     }
-                }
-            }
-            return d;
-        }
-	
 
+                    return res;
+                }
+
+                //Calcul la fermeture transitive
+                public int[,] Warshall()
+                {
+                    int n = this.taille;
+                    int[,] d = new int[n, n];
+                    for (int i = 0; i < n; i++)
+                    {
+                        for (int j = 0; j < n; j++)
+                        {
+                            d[i, j] = this.tab[i, j];
+                        }
+                    }
+                    for (int k = 0; k < n; k++)
+                    {
+                        for (int i = 0; i < n; i++)
+                        {
+                            for (int j = 0; j < n; j++)
+                            {
+                                if (d[i, k] + d[k, j] == 2 && i != j)
+                                {
+                                    d[i, j] = 1;
+                                }
+                            }
+                        }
+                    }
+                    return d;
+                }
+          
     }
 }
