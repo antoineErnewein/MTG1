@@ -1,0 +1,5 @@
+C:\Users\Antoine\Documents\Visual Studio 2010\Projects\MTG1\MTG1\bin\Debug\MTG1.exe
+C:\Users\Antoine\Documents\Visual Studio 2010\Projects\MTG1\MTG1\bin\Debug\MTG1.pdb
+C:\Users\Antoine\Documents\Visual Studio 2010\Projects\MTG1\MTG1\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Antoine\Documents\Visual Studio 2010\Projects\MTG1\MTG1\obj\x86\Debug\MTG1.exe
+C:\Users\Antoine\Documents\Visual Studio 2010\Projects\MTG1\MTG1\obj\x86\Debug\MTG1.pdb
