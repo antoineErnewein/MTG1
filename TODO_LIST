@@ -1,3 +1,37 @@
 Insérez ici la liste des choses à faire :
 
-- réorganisation des classes
+- Réorganisation des classes
+
+CdC G-Toolbox V3 :
+-------------------
+
+- Liste incidence
+- Indicateur nb itération (rapport à n ou m)
+- Calcul caractéristiques n, m, f, x
+- Graphe,Κx,x 
+- Degré :δ et Δ 
+- Calcul indicateurs αβωτν 
+- Calcul coloration χψ
+- Calcul caractéristique : - Symétrique
+						   - Eulérien
+						   - Hamiltonien
+						   - Planaire
+
+- Recherche du graphe complémentaire
+- Recherche du graphe réduit
+
+---------------------------------------------
+
+CdC G-Toolbox V4 « Chemins optimaux » :
+----------------------------------------
+
+- Parcours LexBFS
+- Tri topologique
+- Algo de Ford
+- Algo de Moore
+- Dijkstra
+- Algo de Bellman
+- Kalaba
+- Algo de Floyd-Warshall
+- Algo A*
+- Algo de Branch And Bound
