@@ -8,23 +8,19 @@ namespace MTG1
 {
 	public class Matrice
 	{
-        static int M = int.MaxValue;
+		static int M = int.MaxValue;
         public int taille;
         public int[,] tab;
         public List<char> info;
         static List<char> pDFS;
         static List<char> pred;
-
-        //Instancie une matrice d'adjacence de taille n
-        public Matrice(int n)
+		public Matrice(int n)
         {
             this.taille = n;
             this.tab = new int[n, n];
             this.info = new List<char>();
         }
-
-        //Remplit aléatoirement une matrice (sans boucle sur les sommets)
-        public void fillMatrice()
+		public void fillMatrice()
         {
             Random rand = new Random();
 
@@ -175,8 +171,7 @@ namespace MTG1
 
             else { Console.WriteLine("Un des sommets n'existe pas dans la matrice"); }
         }
-
-        //Importe un CSV dans la matrice courante
+          //Importe un CSV dans la matrice courante
         public void importCsv(string file)
         {
             int total = 0;
@@ -214,8 +209,36 @@ namespace MTG1
             }
             sr.Close();
         }
+		 //Parcours d'arbre en largeur
+        public List<char> BFS(int racine)
+        {
+            List<char> res = new List<char>();
+            Queue<int> f = new Queue<int>();
+            bool[] marqued = new bool[this.taille];
+            for (int i = 0; i < this.taille; i++)
+                marqued[i] = false;
+            marqued[racine] = true;
+            f.Enqueue(racine);
+            int x;
+            while (f.Count != 0)
+            {
+                x = f.Dequeue();
+                res.Add(this.info[x]);
 
-        //Donne la composante fortement connexe du graphe
+                for (int i = 0; i < this.taille; i++)
+                {
+                    if (this.tab[i, x] > 0)
+                        if (!marqued[i])
+                        {
+                            marqued[i] = true;
+                            f.Enqueue(i);
+                        }
+                }
+            }
+            return res;
+        }
+		
+		 //Donne la composante fortement connexe du graphe
         public List<List<Char>> Malgrange()
         {
             Random rand = new Random();
@@ -243,47 +266,16 @@ namespace MTG1
                 //Cas sommet isolé
                 /*if (Successeurs.Count == 0 && Predecesseurs.Count == 0)
                 {
-                    CFC.Add(Sommets[Sommets.);
+                    CFC.Add(Sommets[Sommets]);
                     Sommets.Remove(sommet);
                 }*/
-
                 ListeCFC.Add(new List<char>(CFC));
                 CFC.Clear();
             }
 
             return ListeCFC;
         }
-
-        //Parcours d'arbre en largeur
-        public List<char> BFS(int racine)
-        {
-            List<char> res = new List<char>();
-
-            Queue<int> f = new Queue<int>();
-            bool[] marqued = new bool[this.taille];
-            for (int i = 0; i < this.taille; i++)
-                marqued[i] = false;
-            marqued[racine] = true;
-            f.Enqueue(racine);
-            int x;
-            while (f.Count != 0)
-            {
-                x = f.Dequeue();
-                res.Add(this.info[x]);
-
-                for (int i = 0; i < this.taille; i++)
-                {
-                    if (this.tab[i, x] > 0)
-                        if (!marqued[i])
-                        {
-                            marqued[i] = true;
-                            f.Enqueue(i);
-                        }
-                }
-            }
-
-            return res;
-        }
+       
 
         //Parcours d'abre en profondeur 
         public List<char> DFS(int racine)
@@ -399,6 +391,6 @@ namespace MTG1
                     }
                     return d;
                 }
-		}
     }
+}
 

@@ -40,7 +40,7 @@ namespace MTG1
                 Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
                 Console.WriteLine("Matrice d'adjacence :\n\n");
                 mat.printMatrice();
-                Console.WriteLine("\nActions :\n1) Ajouter un noeud\n2) Supprimer un noeud\n3) Modifier le nombre d'arc entre deux noeuds\n4) Parcours BFS\n5) Parcours DFS\n6) CFC selon Malgrange\n7) Warshall\n8) Quitter");
+                Console.WriteLine("\nActions :\n1) Ajouter un noeud\n2) Supprimer un noeud\n3) Modifier le nombre d'arc entre deux noeuds\n10) Parcours BFS\n11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n0) Quitter");
                 int k = int.Parse(Console.ReadLine());
 
                 switch (k)
@@ -65,7 +65,7 @@ namespace MTG1
                         mat.setArcValue(edge1, edge2, nb);
                         break;
 
-                    case 4:
+                    case 10:
                         Console.WriteLine("\nSommet racine : ");
                         List<char> pBFS = mat.BFS(mat.info.IndexOf(Console.ReadLine()[0]));
                         string parcours = "[ ";
@@ -77,8 +77,7 @@ namespace MTG1
                         Console.WriteLine(parcours);
                         Console.ReadLine();
                         break;
-
-                    case 5:
+                    case 11:
                         Console.WriteLine("\nSommet racine : ");
                         List<char> pDFS = mat.DFS(mat.info.IndexOf(Console.ReadLine()[0]));
                         string parcours2 = "[ ";
@@ -91,7 +90,7 @@ namespace MTG1
                         Console.ReadLine();
                         break;
 
-                    case 6:
+                    case 12:
                         Console.WriteLine("Composante Fortement connexe du graphe :");
                         List<List<char>> CFC = mat.Malgrange();
                         string cfc = "";
@@ -109,7 +108,7 @@ namespace MTG1
                         Console.ReadLine();
                         break;
 
-                    case 7:
+                    case 13:
                         int[,] war = mat.Warshall();
                         
                         for (int i = 0; i < mat.taille; i++)
@@ -124,7 +123,7 @@ namespace MTG1
                         Console.ReadLine();
                         break;
 
-                    case 8 :
+                    case 0 :
                         again = false;
                         break;
                 }
@@ -132,6 +131,9 @@ namespace MTG1
             }
             
         }
-
+        //Remplit aléatoirement une matrice (sans boucle sur les sommets)
+        
+		/*
+      */
 	}
 }
