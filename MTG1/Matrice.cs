@@ -14,36 +14,57 @@ namespace MTG1
         public List<char> info;
         static List<char> pDFS;
         static List<char> pred;
-		public Matrice(int n)
+		private string type;
+		
+		public Matrice(int n,string type)
         {
             this.taille = n;
             this.tab = new int[n, n];
             this.info = new List<char>();
-        }
+        	this.type = type;
+		}
 		public void fillMatrice()
         {
-            Random rand = new Random();
-
-            for (int i = 0; i < this.taille; i++)
-            {
-                this.info.Add((char)(i + 65));
-            }
-
-            for (int ligne = 0; ligne < this.taille; ligne++)
-            {
-                for (int colonne = 0 + ligne; colonne < this.taille; colonne++)
-                {
-                    if (ligne == colonne)
-                    {
-                        this.tab[ligne, colonne] = 0;
-                    }
-                    else
-                    {
-                        this.tab[ligne, colonne] = rand.Next(0, 2);
-                        this.tab[colonne, ligne] = this.tab[ligne, colonne];
-                    }
-                }
-            }
+		        Random rand = new Random();
+		
+		        for (int i = 0; i < this.taille; i++)
+		        {
+		            this.info.Add((char)(i + 65));
+		        }
+		
+				if(this.type == "NO")
+		        for (int ligne = 0; ligne < this.taille; ligne++)
+		        {
+		            for (int colonne = 0 + ligne; colonne < this.taille; colonne++)
+		            {
+						if (ligne == colonne)
+		            	    {
+		            	        this.tab[ligne, colonne] = 0;
+		            	    }
+		            	    else
+		            	    {
+		            	        this.tab[ligne, colonne] = rand.Next(0, 2);
+		            	        this.tab[colonne, ligne] = this.tab[ligne, colonne];
+		            	    }
+		            }
+		        }
+				else if (this.type == "O")
+				for (int ligne = 0; ligne < this.taille; ligne++)
+		        {
+		            for (int colonne = 0 ; colonne < this.taille; colonne++)
+		            {
+		            	        this.tab[ligne, colonne] = rand.Next(0, 2);
+					}
+		        }
+				else if (this.type == "OP")
+				for (int ligne = 0; ligne < this.taille; ligne++)
+		        {
+		            for (int colonne = 0 ; colonne < this.taille; colonne++)
+		            {
+		            	        if(rand.Next(0, 2) == 1)
+									this.tab[ligne, colonne] = rand.Next(0,10);
+					}
+		        }
         }
 
         //Affiche la matrice d'adjacence
@@ -276,48 +297,64 @@ namespace MTG1
             return ListeCFC;
         }
        
-
-        //Parcours d'abre en profondeur 
-        public List<char> DFS(int racine)
-        {
-            pDFS = new List<char>();
-            bool[] explored = new bool[this.taille];
-            for (int i = 0; i < this.taille; i++)
-                explored[i] = false;
-            recDFS(this.tab, racine, this.taille, explored);
-
-            return pDFS;
-        }
-
-        //Procédure récursive utilisée dans DSF
-        public void recDFS(int[,] a, int racine, int n, bool[] explored)
-        {
-            pDFS.Add(this.info[racine]);
-            explored[racine] = true;
-            for (int i = 0; i < n; i++)
-            {
-                if (a[i, racine] > 0)
-                    if (!explored[i])
-                    {
-                        recDFS(a, i, n, explored);
-                    }
-            }
-        }
-
-                //Cherche les prédécesseurs d'un sommet
-                public List<char> predecesseurs(int racine)
+	
+	    //Parcours d'abre en profondeur 
+	    public List<char> DFS(int racine)
+	    {
+	        pDFS = new List<char>();
+	        bool[] explored = new bool[this.taille];
+	        for (int i = 0; i < this.taille; i++)
+	            explored[i] = false;
+	        recDFS(this.tab, racine, this.taille, explored);
+	
+	        return pDFS;
+	    }
+	
+	    //Procédure récursive utilisée dans DSF
+	    public void recDFS(int[,] a, int racine, int n, bool[] explored)
+	    {
+	        pDFS.Add(this.info[racine]);
+	        explored[racine] = true;
+	        for (int i = 0; i < n; i++)
+	        {
+	            if (a[i, racine] > 0)
+	                if (!explored[i])
+	                {
+	                    recDFS(a, i, n, explored);
+	                }
+	        }
+	    }
+	
+	            //Cherche les prédécesseurs d'un sommet
+	            public List<char> predecesseurs(int racine)
+	            {
+                List<Char> predecesseurs = new List<char>();
+                int indicepred = 0;
+                bool[] explored = new bool[this.taille];
+                for (int i = 0; i < this.taille; i++)
                 {
-                    List<Char> predecesseurs = new List<char>();
-                    int indicepred = 0;
-                    bool[] explored = new bool[this.taille];
-                    for (int i = 0; i < this.taille; i++)
+                    explored[i] = false;
+                }
+
+                for (int i = 0; i < this.taille; i++)
+                {
+                    if (this.tab[racine, i] > 0)
                     {
-                        explored[i] = false;
+                        if (!explored[i])
+                        {
+                            predecesseurs.Add(this.info[i]);
+                        }
                     }
+                }
+
+                while(prochainPred(predecesseurs, explored) != -1)
+                {
+                    indicepred = prochainPred(predecesseurs, explored);
+                    explored[indicepred] = true;
 
                     for (int i = 0; i < this.taille; i++)
                     {
-                        if (this.tab[racine, i] > 0)
+                        if (this.tab[indicepred, i] > 0)
                         {
                             if (!explored[i])
                             {
@@ -326,71 +363,59 @@ namespace MTG1
                         }
                     }
 
-                    while(prochainPred(predecesseurs, explored) != -1)
-                    {
-                        indicepred = prochainPred(predecesseurs, explored);
-                        explored[indicepred] = true;
-
-                        for (int i = 0; i < this.taille; i++)
-                        {
-                            if (this.tab[indicepred, i] > 0)
-                            {
-                                if (!explored[i])
-                                {
-                                    predecesseurs.Add(this.info[i]);
-                                }
-                            }
-                        }
-
-                    }
-
-                    return predecesseurs;
                 }
 
-                //Cherche le prochain prédecesseur
-                public int prochainPred(List<char> pred, bool[] explored)
+                return predecesseurs;
+            }
+
+            //Cherche le prochain prédecesseur
+            public int prochainPred(List<char> pred, bool[] explored)
+            {
+                int res = -1;
+
+                for (int i = 0; i < pred.Count; i++)
                 {
-                    int res = -1;
-
-                    for (int i = 0; i < pred.Count; i++)
+                    if (!explored[this.info.IndexOf(pred[i])])
                     {
-                        if (!explored[this.info.IndexOf(pred[i])])
-                        {
-                            res = this.info.IndexOf(pred[i]);
-                            break;
-                        }
+                        res = this.info.IndexOf(pred[i]);
+                        break;
                     }
-
-                    return res;
                 }
 
-                //Calcul la fermeture transitive
-                public int[,] Warshall()
+                return res;
+            }
+
+            //Calcul la fermeture transitive
+            public int[,] Warshall()
+            {
+                int n = this.taille;
+                int[,] d = new int[n, n];
+                for (int i = 0; i < n; i++)
                 {
-                    int n = this.taille;
-                    int[,] d = new int[n, n];
+                    for (int j = 0; j < n; j++)
+                    {
+                        d[i, j] = this.tab[i, j];
+                    }
+                }
+                for (int k = 0; k < n; k++)
+                {
                     for (int i = 0; i < n; i++)
                     {
                         for (int j = 0; j < n; j++)
                         {
-                            d[i, j] = this.tab[i, j];
-                        }
-                    }
-                    for (int k = 0; k < n; k++)
-                    {
-                        for (int i = 0; i < n; i++)
-                        {
-                            for (int j = 0; j < n; j++)
+                            if (d[i, k] + d[k, j] == 2 && i != j)
                             {
-                                if (d[i, k] + d[k, j] == 2 && i != j)
-                                {
-                                    d[i, j] = 1;
-                                }
+                                d[i, j] = 1;
                             }
                         }
                     }
-                    return d;
                 }
+                return d;
+            }
+		public int nbSommets()
+		{
+			return this.taille;	
+		}
     }
 }
 

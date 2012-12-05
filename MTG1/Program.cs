@@ -10,24 +10,39 @@ namespace MTG1
     {
         static void Main(string[] args)
         {
-            Matrice mat = new Matrice(1);
+            Matrice mat = new Matrice(1,"");
             bool again = true;
             Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
-            Console.WriteLine("1) Creer une matrice aleatoire a N sommets\n2) Importer un fichier CSV\n");
+            Console.WriteLine("1) Creer une matrice aleatoire a N sommets (Non orienté)\n" +
+            	"2) Creer une matrice aleatoire a N sommets (orienté)\n" +
+            	"3) Creer une matrice aleatoire a N sommets (oriénté + pondéré)" +
+            	"\n4) Importer un fichier CSV\n");
             int choix = int.Parse(Console.ReadLine());
+			int n;
             switch (choix)
             {
                 case 1 :
                     Console.WriteLine("Nombre de sommets souhaité :");
-                    int n = int.Parse(Console.ReadLine());
-                    mat = new Matrice(n);
+                    n = int.Parse(Console.ReadLine());
+                    mat = new Matrice(n,"NO");
                     mat.fillMatrice();
                     break;
-
-                case 2 :
+				case 2 :
+                    Console.WriteLine("Nombre de sommets souhaité :");
+                    n = int.Parse(Console.ReadLine());
+                    mat = new Matrice(n,"O");
+                    mat.fillMatrice();
+                    break;
+				case 3 :
+                    Console.WriteLine("Nombre de sommets souhaité :");
+                    n = int.Parse(Console.ReadLine());
+                    mat = new Matrice(n,"OP");
+                    mat.fillMatrice();
+                    break;
+                case 4 :
                     Console.WriteLine("Chemin du fichier CSV :");
                     string chemin = Console.ReadLine();
-                    mat = new Matrice(1);
+                    mat = new Matrice(1,"");
                     mat.importCsv(chemin);
                     break;
             }
@@ -40,7 +55,12 @@ namespace MTG1
                 Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
                 Console.WriteLine("Matrice d'adjacence :\n\n");
                 mat.printMatrice();
-                Console.WriteLine("\nActions :\n1) Ajouter un noeud\n2) Supprimer un noeud\n3) Modifier le nombre d'arc entre deux noeuds\n10) Parcours BFS\n11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n0) Quitter");
+				String menu = "\nActions :\n"+
+					"1) Ajouter un noeud\n2) Supprimer un noeud\n" +
+					"3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n" +
+					"10) Parcours BFS\n" +
+					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n0) Quitter";
+                Console.WriteLine(menu);
                 int k = int.Parse(Console.ReadLine());
 
                 switch (k)
@@ -64,7 +84,10 @@ namespace MTG1
                         int nb = int.Parse(Console.ReadLine());
                         mat.setArcValue(edge1, edge2, nb);
                         break;
-
+					case 4 :
+						Console.Write("Nombre de sommets : "+mat.nbSommets());
+						Console.ReadLine();
+						break;
                     case 10:
                         Console.WriteLine("\nSommet racine : ");
                         List<char> pBFS = mat.BFS(mat.info.IndexOf(Console.ReadLine()[0]));
