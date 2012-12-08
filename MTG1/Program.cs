@@ -12,7 +12,7 @@ namespace MTG1
         {
             Matrice mat = new Matrice(1,"");
             bool again = true;
-            Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
+            Console.WriteLine(" -----------------------------\n| G-ToolBox V3.0 - (08/12/12) |\n -----------------------------\n");
             Console.WriteLine("1) Creer une matrice aleatoire a N sommets (Non orienté)\n" +
             	"2) Creer une matrice aleatoire a N sommets (orienté)\n" +
             	"3) Creer une matrice aleatoire a N sommets (oriénté + pondéré)" +
@@ -52,12 +52,12 @@ namespace MTG1
 
             while (again)
             {
-                Console.WriteLine(" ---------------------------\n| G-ToolBox V2 - (03/12/12) |\n ---------------------------\n");
+                Console.WriteLine(" -----------------------------\n| G-ToolBox V3.0 - (08/12/12) |\n -----------------------------\n");
                 Console.WriteLine("Matrice d'adjacence :\n\n");
                 mat.printMatrice();
 				String menu = "\nActions :\n"+
 					"1) Ajouter un noeud\n2) Supprimer un noeud\n" +
-					"3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n" +
+                    "3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n5) Afficher le degré minimum\n6) Afficher le degré maximum\n" +
 					"10) Parcours BFS\n" +
 					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n0) Quitter";
                 Console.WriteLine(menu);
@@ -88,6 +88,14 @@ namespace MTG1
 						Console.Write("Nombre de sommets : "+mat.nbSommets());
 						Console.ReadLine();
 						break;
+                    case 5:
+                        Console.Write("Degré minimum : " + mat.minDegree());
+                        Console.ReadLine();
+                        break;
+                    case 6:
+                        Console.Write("Degré maximum : " + mat.maxDegree());
+                        Console.ReadLine();
+                        break;
                     case 10:
                         Console.WriteLine("\nSommet racine : ");
                         List<char> pBFS = mat.BFS(mat.info.IndexOf(Console.ReadLine()[0]));
@@ -102,7 +110,7 @@ namespace MTG1
                         break;
                     case 11:
                         Console.WriteLine("\nSommet racine : ");
-                        List<char> pDFS = mat.DFS(mat.info.IndexOf(Console.ReadLine()[0]));
+                        List<char> pDFS = mat.DFS(mat.info.IndexOf(Console.ReadLine()[0]),new Integer(0), true);
                         string parcours2 = "[ ";
                         foreach (char c in pDFS)
                         {

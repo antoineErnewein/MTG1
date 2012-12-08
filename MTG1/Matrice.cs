@@ -8,12 +8,10 @@ namespace MTG1
 {
 	public class Matrice
 	{
-		static int M = int.MaxValue;
         public int taille;
         public int[,] tab;
         public List<char> info;
         static List<char> pDFS;
-        static List<char> pred;
 		private string type;
 		
 		public Matrice(int n,string type)
@@ -233,6 +231,7 @@ namespace MTG1
 		 //Parcours d'arbre en largeur
         public List<char> BFS(int racine)
         {
+            int nb_operations = 0;
             List<char> res = new List<char>();
             Queue<int> f = new Queue<int>();
             bool[] marqued = new bool[this.taille];
@@ -248,20 +247,24 @@ namespace MTG1
 
                 for (int i = 0; i < this.taille; i++)
                 {
+                    nb_operations++;
                     if (this.tab[i, x] > 0)
                         if (!marqued[i])
                         {
+                            nb_operations++;
                             marqued[i] = true;
                             f.Enqueue(i);
                         }
                 }
             }
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
             return res;
         }
 		
 		 //Donne la composante fortement connexe du graphe
         public List<List<Char>> Malgrange()
         {
+            Integer nb_operations = new Integer(0);
             Random rand = new Random();
             List<List<char>> ListeCFC = new List<List<char>>();
             List<Char> CFC = new List<Char>();
@@ -274,12 +277,13 @@ namespace MTG1
             while (Sommets.Count > 0)
             {
                 sommet_elu = rand.Next(0, Sommets.Count);
-                Successeurs = DFS(this.info.IndexOf(Sommets[sommet_elu]));
-                Predecesseurs = predecesseurs(this.info.IndexOf(Sommets[sommet_elu]));
+                Successeurs = DFS(this.info.IndexOf(Sommets[sommet_elu]), nb_operations, false);
+                Predecesseurs = predecesseurs(this.info.IndexOf(Sommets[sommet_elu]), nb_operations);
                 foreach (char sommet in Successeurs)
                 {
                     if (Predecesseurs.Contains(sommet))
                     {
+                        nb_operations.nombre = nb_operations.nombre + Predecesseurs.Count; //On compare chaque élément dans les prédécesseurs
                         CFC.Add(sommet);
                         Sommets.Remove(sommet);
                     }
@@ -294,39 +298,46 @@ namespace MTG1
                 CFC.Clear();
             }
 
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations.nombre + "\n");
             return ListeCFC;
         }
        
 	
 	    //Parcours d'abre en profondeur 
-	    public List<char> DFS(int racine)
+	    public List<char> DFS(int racine, Integer nb_operations, bool justDFS)
 	    {
 	        pDFS = new List<char>();
 	        bool[] explored = new bool[this.taille];
 	        for (int i = 0; i < this.taille; i++)
 	            explored[i] = false;
-	        recDFS(this.tab, racine, this.taille, explored);
-	
+	        recDFS(this.tab, racine, this.taille, explored, nb_operations);
+
+            if (justDFS)
+            {
+                Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations.nombre + "\n");
+            }
 	        return pDFS;
 	    }
 	
 	    //Procédure récursive utilisée dans DSF
-	    public void recDFS(int[,] a, int racine, int n, bool[] explored)
+	    public void recDFS(int[,] a, int racine, int n, bool[] explored, Integer nb_operations)
 	    {
 	        pDFS.Add(this.info[racine]);
 	        explored[racine] = true;
 	        for (int i = 0; i < n; i++)
 	        {
+                nb_operations.nombre++;
 	            if (a[i, racine] > 0)
 	                if (!explored[i])
 	                {
-	                    recDFS(a, i, n, explored);
+                        nb_operations.nombre++;
+	                    recDFS(a, i, n, explored, nb_operations);
 	                }
 	        }
 	    }
 	
 	            //Cherche les prédécesseurs d'un sommet
-	            public List<char> predecesseurs(int racine)
+	            public List<char> predecesseurs(int racine, Integer nb_operations)
 	            {
                 List<Char> predecesseurs = new List<char>();
                 int indicepred = 0;
@@ -338,26 +349,31 @@ namespace MTG1
 
                 for (int i = 0; i < this.taille; i++)
                 {
+                    nb_operations.nombre++;
                     if (this.tab[racine, i] > 0)
                     {
                         if (!explored[i])
                         {
+                            nb_operations.nombre++;
                             predecesseurs.Add(this.info[i]);
                         }
                     }
                 }
 
-                while(prochainPred(predecesseurs, explored) != -1)
+                while(prochainPred(predecesseurs, explored, nb_operations) != -1)
                 {
-                    indicepred = prochainPred(predecesseurs, explored);
+                    nb_operations.nombre++;
+                    indicepred = prochainPred(predecesseurs, explored, nb_operations);
                     explored[indicepred] = true;
 
                     for (int i = 0; i < this.taille; i++)
                     {
+                        nb_operations.nombre++;
                         if (this.tab[indicepred, i] > 0)
                         {
                             if (!explored[i])
                             {
+                                nb_operations.nombre++;
                                 predecesseurs.Add(this.info[i]);
                             }
                         }
@@ -369,14 +385,15 @@ namespace MTG1
             }
 
             //Cherche le prochain prédecesseur
-            public int prochainPred(List<char> pred, bool[] explored)
+            public int prochainPred(List<char> pred, bool[] explored, Integer nb_operations)
             {
                 int res = -1;
 
                 for (int i = 0; i < pred.Count; i++)
                 {
+                    nb_operations.nombre++;
                     if (!explored[this.info.IndexOf(pred[i])])
-                    {
+                    { 
                         res = this.info.IndexOf(pred[i]);
                         break;
                     }
@@ -388,6 +405,8 @@ namespace MTG1
             //Calcul la fermeture transitive
             public int[,] Warshall()
             {
+                int nb_operations = 0;
+
                 int n = this.taille;
                 int[,] d = new int[n, n];
                 for (int i = 0; i < n; i++)
@@ -403,6 +422,7 @@ namespace MTG1
                     {
                         for (int j = 0; j < n; j++)
                         {
+                            nb_operations++;
                             if (d[i, k] + d[k, j] == 2 && i != j)
                             {
                                 d[i, j] = 1;
@@ -410,12 +430,65 @@ namespace MTG1
                         }
                     }
                 }
+                Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
                 return d;
             }
 		public int nbSommets()
 		{
 			return this.taille;	
 		}
+
+        public int maxDegree()
+        {
+            int nb_operations = 0;
+            int maxdegree = 0;
+            int degreCourant = 0;
+
+            for (int i = 0; i < this.taille; i++)
+            {
+                degreCourant = 0;
+                for (int j = 0; j < this.taille; j++)
+                {
+                    nb_operations++;
+                    if (this.tab[i, j] > 0)
+                    degreCourant++;
+                }
+
+                nb_operations++;
+                if (degreCourant > maxdegree)
+                {
+                    maxdegree = degreCourant;
+                }
+            }
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
+            return maxdegree;
+        }
+
+        public int minDegree()
+        {
+            int nb_operations = 0;
+            int mindegree = int.MaxValue;
+            int degreCourant = 0;
+
+            for (int i = 0; i < this.taille; i++)
+            {
+                degreCourant = 0;
+                for (int j = 0; j < this.taille; j++)
+                {
+                    nb_operations++;
+                    if(this.tab[i, j] > 0)
+                    degreCourant++;
+                }
+
+                nb_operations++;
+                if (degreCourant < mindegree)
+                {
+                    mindegree = degreCourant;
+                }
+            }
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
+            return mindegree;
+        }
     }
 }
 
