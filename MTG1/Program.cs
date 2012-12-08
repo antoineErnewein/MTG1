@@ -10,6 +10,7 @@ namespace MTG1
     {
         static void Main(string[] args)
         {
+            
             Matrice mat = new Matrice(1,"");
             bool again = true;
             Console.WriteLine(" -----------------------------\n| G-ToolBox V3.0 - (08/12/12) |\n -----------------------------\n");
@@ -40,8 +41,19 @@ namespace MTG1
                     mat.fillMatrice();
                     break;
                 case 4 :
-                    Console.WriteLine("Chemin du fichier CSV :");
-                    string chemin = Console.ReadLine();
+                    DirectoryInfo dir = new DirectoryInfo("./");
+                    FileInfo[] files = dir.GetFiles("*.csv");
+                    int curs = 0;
+                    
+                    Console.WriteLine("Liste des fichiers csv : ");
+                    foreach (FileInfo fi in files)
+                    {
+                        Console.WriteLine("\t  " + curs + "--> " + fi.Name);
+                        curs++;
+                    }
+                    Console.WriteLine("\nEntrez le numéro de fichier à charger :");
+                    string chemin = files[int.Parse(Console.ReadLine())].FullName;
+                    
                     mat = new Matrice(1,"");
                     mat.importCsv(chemin);
                     break;
@@ -57,9 +69,9 @@ namespace MTG1
                 mat.printMatrice();
 				String menu = "\nActions :\n"+
 					"1) Ajouter un noeud\n2) Supprimer un noeud\n" +
-                    "3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n5) Afficher le degré minimum\n6) Afficher le degré maximum\n" +
+                    "3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n5) Afficher le nombre d'aretes\n6) Afficher le degré minimum\n7) Afficher le degré maximum\n8) Tester si le graphe est complet\n9) Tester si le graphe est connexe\n" +
 					"10) Parcours BFS\n" +
-					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n0) Quitter";
+					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n14) Eulérien\n0) Quitter";
                 Console.WriteLine(menu);
                 int k = int.Parse(Console.ReadLine());
 
@@ -89,11 +101,37 @@ namespace MTG1
 						Console.ReadLine();
 						break;
                     case 5:
-                        Console.Write("Degré minimum : " + mat.minDegree());
+                        Console.Write("Nombre d'aretes : " + mat.nbAretes());
                         Console.ReadLine();
                         break;
                     case 6:
+                        Console.Write("Degré minimum : " + mat.minDegree());
+                        Console.ReadLine();
+                        break;
+                    case 7:
                         Console.Write("Degré maximum : " + mat.maxDegree());
+                        Console.ReadLine();
+                        break;
+                    case 8:
+                        if (mat.estComplet())
+                        {
+                            Console.Write("Le graphe est " + mat.nbSommets() + "-Complet");
+                        }
+                        else
+                        {
+                            Console.Write("Le graphe n'est pas complet");
+                        }
+                        Console.ReadLine();
+                        break;
+                    case 9:
+                        if (mat.estConnexe())
+                        {
+                            Console.Write("Le graphe est connexe");
+                        }
+                        else
+                        {
+                            Console.Write("Le graphe n'est pas connexe");
+                        }
                         Console.ReadLine();
                         break;
                     case 10:
@@ -154,9 +192,22 @@ namespace MTG1
                         Console.ReadLine();
                         break;
 
+                    case 14:
+                        if (mat.estEulerien())
+                        {
+                            Console.Write("Le graphe est eulérien");
+                        }
+                        else
+                        {
+                            Console.Write("Le graphe n'est pas eulérien");
+                        }
+                        Console.ReadLine();
+                        break;
+
                     case 0 :
                         again = false;
                         break;
+
                 }
                 Console.Clear();
             }

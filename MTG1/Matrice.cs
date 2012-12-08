@@ -489,6 +489,117 @@ namespace MTG1
             Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
             return mindegree;
         }
+
+        public int nbAretes()
+        {
+            int nb_operations = 0;
+            int arete = 0;
+
+            for (int i = 0; i < this.taille; i++)
+            {
+                for (int j = 0; j < this.taille; j++)
+                {
+                    nb_operations++;
+                    if (this.tab[i, j] > 0)
+                        arete++;
+                }
+            }
+
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
+            return arete;
+        }
+
+        public bool estComplet()
+        {
+            int nb_operations = 0;
+            bool res = true;
+
+            for (int i = 0; i < this.taille && res; i++)
+            {     
+                for (int j = 0; j < this.taille && res; j++)
+                {
+                    nb_operations++;
+                    if (i != j && this.tab[i, j] == 0)
+                    {
+                        res = false;
+                    }
+                }
+            }
+
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
+            return res;
+        }
+
+        public bool estConnexe()
+        {
+            bool connexe = true;
+            Integer nb_operations = new Integer(0);
+            List<char> pred = new List<char>();
+            for (int i = 0; i < this.taille && connexe; i++)
+            {
+                pred = predecesseurs(i, nb_operations);
+
+                nb_operations.nombre++;
+                if (pred.Distinct().Count() < this.taille)
+                {
+                    connexe = false;
+                }
+
+                /*Console.Write(this.info[i] + " : <");
+                foreach (char c in l.Distinct())
+                {
+                    Console.Write(c + ",");
+                }
+                Console.Write(">\n");*/
+                pred.Clear();
+            }
+
+            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations.nombre + "\n");
+            return connexe;
+        }
+
+        public bool estEulerien()
+        {
+            bool eulerien = false;
+            int degreCourant = 0;
+            int nbimpair = 0;
+
+            if(this.estConnexe())
+            {
+                if (this.type == "NO")
+                {
+                    for (int i = 0; i < this.taille && nbimpair < 2; i++)
+                    {
+                        for (int j = 0; j < this.taille && nbimpair < 2; j++)
+                        {
+                            if (this.tab[i, j] > 0)
+                            {
+                                degreCourant++;
+                            }
+                        }
+
+                        if (degreCourant % 2 != 0)
+                        {
+                            nbimpair++;
+                        }
+
+                        degreCourant = 0;
+                    }
+                    if (nbimpair < 2)
+                    {
+                        eulerien = true;
+                    }
+                }
+                
+                    //A faire (regarder colonnes + lignes)
+                else { eulerien = false; }
+            }
+
+
+
+            return eulerien;
+        }
+
     }
 }
 
