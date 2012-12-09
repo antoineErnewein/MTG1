@@ -401,7 +401,57 @@ namespace MTG1
 
                 return res;
             }
+			public int[,] FloydWarshall()
+			{
+				if(this.type != "NO")
+				{
+					int nb_operations = 0;
 
+		            int n = this.taille;
+		            int[,] d = new int[n, n];
+		            for (int i = 0; i < n; i++)
+		            {
+		                for (int j = 0; j < n; j++)
+		                {
+		                    d[i, j] = this.tab[i,j];
+							if(tab[i,j] == 0)
+								d[i,j] = -1;
+							if(i==j)
+								d[i,j] = 0;
+		                }
+		            }
+		            for (int k = 0; k < n; k++)
+		            {
+		                for (int i = 0; i < n; i++)
+		                {
+		                    for (int j = 0; j < n; j++)
+		                    {
+		                        nb_operations++;
+								if( d[i,k] != -1 && d[k,j] != -1 )
+		                        if (d[i, k] + d[k, j] < d[i,j] && d[i, k] + d[k, j] > 0)
+		                        {
+		                            d[i, j] = d[i, k] + d[k, j];
+								Console.WriteLine(i+"-"+k+"-"+j);
+		                        }
+		                    }
+		                }
+		            }
+					for (int k = 0; k < n; k++)
+		            {
+		                for (int i = 0; i < n; i++)
+		                {
+		                    if(d[k,i] == -1)
+								d[k,i] = 0;
+		                }
+		            }
+		            Console.WriteLine("\nNombre d'opérations effectuées : " + nb_operations + "\n");
+		            return d;
+				}
+				else
+				{
+					return this.tab;
+				}
+			}
             //Calcul la fermeture transitive
             public int[,] Warshall()
             {
@@ -594,9 +644,6 @@ namespace MTG1
                     //A faire (regarder colonnes + lignes)
                 else { eulerien = false; }
             }
-
-
-
             return eulerien;
         }
 

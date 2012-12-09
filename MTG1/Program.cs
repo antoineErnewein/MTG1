@@ -71,7 +71,7 @@ namespace MTG1
 					"1) Ajouter un noeud\n2) Supprimer un noeud\n" +
                     "3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n5) Afficher le nombre d'aretes\n6) Afficher le degré minimum\n7) Afficher le degré maximum\n8) Tester si le graphe est complet\n9) Tester si le graphe est connexe\n" +
 					"10) Parcours BFS\n" +
-					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n14) Eulérien\n0) Quitter";
+					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n14) Eulérien\n15) Floyd-Warshall\n0) Quitter";
                 Console.WriteLine(menu);
                 int k = int.Parse(Console.ReadLine());
 
@@ -203,6 +203,18 @@ namespace MTG1
                         }
                         Console.ReadLine();
                         break;
+					case 15:
+						int[,] res = mat.FloydWarshall();
+						for (int i = 0; i < mat.taille; i++)
+                        {
+                           for (int j = 0; j < mat.taille; j++)
+                           {
+                            Console.Write(res[i,j] + " ");
+                           }
+                           Console.Write("\n");
+                        }
+						Console.ReadLine();
+						break;
 
                     case 0 :
                         again = false;
