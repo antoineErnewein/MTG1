@@ -21,6 +21,7 @@ namespace MTG1
             this.info = new List<char>();
         	this.type = type;
 		}
+		
 		public void fillMatrice()
         {
 		        Random rand = new Random();
@@ -646,7 +647,59 @@ namespace MTG1
             }
             return eulerien;
         }
-
+		
+		public int[,] getIncidence()
+		{
+			int[,] cpy = this.tab;
+			Console.WriteLine("Nombre d'arretes -> ");
+			int arretes = this.nbAretes();
+			int n = this.taille;
+			int ind_arrete =0;
+			int[,] incidence = new int[n,arretes];
+			for(int i = 0 ; i < n ; i++)
+				for(int j=0;j<n;j++)
+				{
+					//Si on trouve une arrete
+					if(cpy[i,j] != 0)
+					{
+						// alors on créer un arrète
+						for(int x=0;x<n;x++)
+						{
+							if(x == i)
+								incidence[x,ind_arrete] = cpy[i,j];
+							else if (x == j)
+								incidence[x,ind_arrete] = -cpy[i,j];
+							else
+								incidence[x,ind_arrete] = 0;
+						}
+						// on passe à la colonne d'après
+						ind_arrete++;
+					}
+				}
+			
+			//On affiche le tableau puis on le retourne
+			for(int i=0;i<n;i++)
+			{
+				for(int j=0;j<arretes;j++)
+				{
+					if(incidence[i,j] < 0)
+						Console.Write(incidence[i,j]+" ");
+					else
+						Console.Write(" "+incidence[i,j]+" ");;
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine(n*arretes+" opérations effectuées");
+			return incidence;
+		}
+		
+		public void Dijsktra(int depart)
+		{
+			Console.WriteLine("Trust me it works !");	
+		}
+		/*
+		 * Fonction d'afffichage d'un tableau
+		 * */
     }
 }
 

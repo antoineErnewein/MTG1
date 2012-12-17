@@ -71,7 +71,7 @@ namespace MTG1
 					"1) Ajouter un noeud\n2) Supprimer un noeud\n" +
                     "3) Modifier le nombre d'arc entre deux noeuds\n4) Afficher le nombre de sommets\n5) Afficher le nombre d'aretes\n6) Afficher le degré minimum\n7) Afficher le degré maximum\n8) Tester si le graphe est complet\n9) Tester si le graphe est connexe\n" +
 					"10) Parcours BFS\n" +
-					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n14) Eulérien\n15) Floyd-Warshall\n0) Quitter";
+					"11) Parcours DFS\n12) CFC selon Malgrange\n13) Warshall\n14) Eulérien\n15) Floyd-Warshall\n16) Dijsktra\n17) matrice d'incidence\n0) Quitter";
                 Console.WriteLine(menu);
                 int k = int.Parse(Console.ReadLine());
 
@@ -215,8 +215,16 @@ namespace MTG1
                         }
 						Console.ReadLine();
 						break;
-
-                    case 0 :
+				case 16 :
+					Console.WriteLine("\nSommet racine : ");
+					mat.Dijsktra(mat.info.IndexOf(Console.ReadLine()[0]));
+					Console.ReadLine();
+					break;;
+				case 17 : 
+					int[,] incidence = mat.getIncidence();
+					Console.ReadLine();
+				break;;
+					case 0 :
                         again = false;
                         break;
 
